@@ -1,0 +1,254 @@
+<html>
+<head>
+<title>Tree Lights 2.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css"/>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="semantic/dist/semantic.js"></script>
+</head>
+<body class="basic minimal" style>
+<div class="ui masthead segment">
+<div class="ui secondary menu">
+  <div class="header item">
+    <div class="ui small basic icon buttons"> 
+      <button class="ui save button">
+        <i class="save icon" style="curosr:pointer"></i>
+      </button>
+      <button class="ui download button">
+        <i class="download icon" style="curosr:pointer"></i>
+      </button>
+      <button class="ui upload button">
+        <i class="upload icon" style="curosr:pointer"></i>
+      </button>
+      <button class="ui stop button">
+        <i class="stop icon" style="curosr:pointer"></i>
+      </button>
+      <button class="ui play button">
+        <i class="play icon" style="curosr:pointer"></i>
+      </button>
+    </div>
+  </div>
+ 
+  <div class="right menu">
+    <div class="ui divided grid" style="width:200px">
+
+      <div class="three column row">
+      <div class="column">
+      <b>Start</b>
+      <div class="ui inline dropdown">
+        <input type="hidden" name="start" value="14">
+        <div class="default text"> 2pm</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <div class="item" data-value="0">12am</div>
+          <div class="item" data-value="1"> 1am</div>
+          <div class="item" data-value="2"> 2am</div>
+          <div class="item" data-value="3"> 3am</div>
+          <div class="item" data-value="4"> 4am</div>
+          <div class="item" data-value="5"> 5am</div>
+          <div class="item" data-value="6"> 6am</div>
+          <div class="item" data-value="7"> 7am</div>
+          <div class="item" data-value="8"> 8am</div>
+          <div class="item" data-value="9"> 9am</div>
+          <div class="item" data-value="10">10am</div>
+          <div class="item" data-value="11">11am</div>
+          <div class="item" data-value="12">12pm</div>
+          <div class="item" data-value="13"> 1pm</div>
+          <div class="item" data-value="14"> 2pm</div>
+          <div class="item" data-value="15"> 3pm</div>
+          <div class="item" data-value="16"> 4pm</div>
+          <div class="item" data-value="17"> 5pm</div>
+          <div class="item" data-value="18"> 6pm</div>
+          <div class="item" data-value="19"> 7pm</div>
+          <div class="item" data-value="20"> 8pm</div>
+          <div class="item" data-value="21"> 9pm</div>
+          <div class="item" data-value="22">10pm</div>
+          <div class="item" data-value="23">11pm</div>
+        </div> <!-- menu -->
+      </div>
+      </div>  <!-- column -->
+
+      <div class="column">
+      <b>End</b>
+      <div class="ui inline dropdown">
+        <input type="hidden" name="end" value="20">
+        <div class="default text">10pm</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <div class="item" data-value="0">12am</div>
+          <div class="item" data-value="1"> 1am</div>
+          <div class="item" data-value="2"> 2am</div>
+          <div class="item" data-value="3"> 3am</div>
+          <div class="item" data-value="4"> 4am</div>
+          <div class="item" data-value="5"> 5am</div>
+          <div class="item" data-value="6"> 6am</div>
+          <div class="item" data-value="7"> 7am</div>
+          <div class="item" data-value="8"> 8am</div>
+          <div class="item" data-value="9"> 9am</div>
+          <div class="item" data-value="10">10am</div>
+          <div class="item" data-value="11">11am</div>
+          <div class="item" data-value="12">12pm</div>
+          <div class="item" data-value="13"> 1pm</div>
+          <div class="item" data-value="14"> 2pm</div>
+          <div class="item" data-value="15"> 3pm</div>
+          <div class="item" data-value="16"> 4pm</div>
+          <div class="item" data-value="17"> 5pm</div>
+          <div class="item" data-value="18"> 6pm</div>
+          <div class="item" data-value="19"> 7pm</div>
+          <div class="item" data-value="20"> 8pm</div>
+          <div class="item" data-value="21"> 9pm</div>
+          <div class="item" data-value="22">10pm</div>
+          <div class="item" data-value="23">11pm</div>
+        </div> <!-- menu -->
+      </div>
+      </div> <!-- column -->
+
+      <div class="column"></div>
+
+      </div> <!-- row -->
+
+    </div>
+    </div>
+</div> <!-- menu -->
+</div> <!-- masthead -->
+
+<div class="ui container">
+<div class="ui right floated menu">
+  <div class="ui small basic icon buttons">
+    <button class="ui button add">
+      <i class="plus icon" style="color:green;cursor:pointer"></i>
+    </button>
+  </div>
+</div>
+</div>
+
+<div id="light_actions" class="ui vertical items">
+</div>
+
+
+<div class="ui basic modal">
+  <i class="close icon"></i>
+  <div class="ui cards">
+
+    <div class="centered card">
+     <div class="image">
+       <img width=290 height=290 src="/images/rainbow.jpg">
+     </div> 
+     <div class="content">
+       <div class="header">Rainbow</div>
+       <div class="meta">
+         Color lights in a rainbow pattern
+       </div>
+       <div class="description">
+         Lets you control the colors, shift speed and duration.
+       </div>
+     </div>
+     <div id="new_rainbow" class="ui bottom attached button">
+       <i class="add icon"></i>
+       Add
+     </div>
+    </div>
+
+    <div class="centered card">
+     <div class="image">
+       <img width=290 height=290 src="/images/solid.jpg">
+     </div> 
+     <div class="content">
+       <div class="header">Solid Color</div>
+       <div class="meta">
+         Color lights in a single solid color
+       </div>
+       <div class="description">
+         Lets you control the color, fade speed, and brightness.
+       </div>
+     </div>
+     <div id="new_solid" class="ui bottom attached button">
+       <i class="add icon"></i>
+       Add
+     </div>
+    </div>
+
+    <div class="centered card">
+     <div class="image">
+       <img width=290 height=290 src="/images/trace.jpg">
+     </div> 
+     <div class="content">
+       <div class="header">Moving Dot</div>
+       <div class="meta">
+         A colored dot moves around the string
+       </div>
+       <div class="description">
+         Lets you control the color, speed, and tail length.
+       </div>
+     </div>
+     <div id="new_trace" class="ui bottom attached button">
+       <i class="add icon"></i>
+       Add
+     </div>
+    </div>
+
+    <div class="centered card">
+     <div class="image">
+       <img width=290 height=290 src="/images/blink.jpg">
+     </div> 
+     <div class="content">
+       <div class="header">Blinking Lights</div>
+       <div class="meta">
+         Lights blink one color 
+       </div>
+       <div class="description">
+         Lets you control the color, speed, and density.
+       </div>
+     </div>
+     <div id="new_blink" class="ui bottom attached button">
+       <i class="add icon"></i>
+       Add
+     </div>
+    </div>
+
+    <div class="centered card">
+     <div class="image">
+       <img width=290 height=290 src="/images/alternate.jpg">
+     </div> 
+     <div class="content">
+       <div class="header">Alternating Colors</div>
+       <div class="meta">
+         The lights altnerate colors 
+       </div>
+       <div class="description">
+         Lets you control the colors and alternating pattern.
+       </div>
+     </div>
+     <div id="new_alternate" class="ui bottom attached button">
+       <i class="add icon"></i>
+       Add
+     </div>
+    </div>
+
+    <div class="centered card">
+     <div class="image">
+       <img width=290 height=290 src="/images/cycle.jpg">
+     </div> 
+     <div class="content">
+       <div class="header">Solid Cycle</div>
+       <div class="meta">
+         All lights cycle through colors 
+       </div>
+       <div class="description">
+         Lets you control the colors and brightness.
+       </div>
+     </div>
+     <div id="new_cycle" class="ui bottom attached button">
+       <i class="add icon"></i>
+       Add
+     </div>
+    </div>
+
+
+  </div>
+</div>
+
+<script type="text/javascript" src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+    <div class="image">
+      <input type="hidden" name="action_type" value="alternate">
+      <img src="/images/alternate.jpg">
+    </div>
+
+    <div class="content">
+      <a class="header">Alternating Colors</a>
+
+      <div class="ui right floated">
+      <div class="ui horizontal list">
+
+      <div class="item">
+      <b>Speed</b>
+      <div class="ui inline dropdown">
+        <input type="hidden" name="speed" value="0">
+        <div class="default text">Fixed</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <div class="item" data-value="0">Fixed</div>
+          <div class="item" data-value="1">1x</div>
+          <div class="item" data-value="2">2x</div>
+          <div class="item" data-value="5">5x</div>
+          <div class="item" data-value="10">10x</div>
+        </div>
+      </div>
+      </div> <!-- item -->
+
+      <div class="item">
+      <b>Time</b>
+      <div class="ui inline dropdown">
+        <input type="hidden" name="time" value="1">
+        <div class="default text">1 min</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <div class="item" data-value="1">1 min</div>
+          <div class="item" data-value="2">2 min</div>
+          <div class="item" data-value="5">5 min</div>
+          <div class="item" data-value="10">10 min</div>
+        </div>
+      </div>
+      </div> <!-- item -->
+
+      <div class="item">
+      <button class="mini ui labeled icon preview button">
+        <i class="play icon"></i>
+        Preview
+      </button>
+      </div>
+
+      </div> <!-- list -->
+      </div> <!-- right floated -->
+
+      <div class="meta">
+        <span>The lights alternate colors</span>
+      </div>
+
+      <div class="description">
+        <div class="ui container">
+        <div class="ui list">
+
+        <div class="item">
+        <div class="ui container">
+          <b>Start</b> 
+          <div class="mini ui buttons">
+            <input type="hidden" name="reverse" value="1">
+            <button class="ui selector button active" data-value="1">Top</button>
+            <div class="or"></div>
+            <button class="ui selector button" data-value="0">Bottom</button>
+          </div>
+        </div>
+        </div>
+
+        <div class="item">
+        <b>Colors</b>
+        <div class="ui container">
+          <button class="tiny ui white toggle button" name="color" value="white">White</button>
+          <button class="tiny ui red toggle button" name="color" value="red">Red</button>
+          <button class="tiny ui orange toggle basic button" name="color" value="orange">Orange</button>
+          <button class="tiny ui yellow toggle basic button" name="color" value="yellow">Yellow</button>
+          <button class="tiny ui green toggle button" name="color" value="green">Green</button>
+          <button class="tiny ui blue toggle basic button" name="color" value="blue">Blue</button>
+          <button class="tiny ui violet toggle basic button" value="violet">Violet</button>
+        </div>
+        </div>
+
+        </div> <!-- list -->
+        </div>
+      </div> <!-- description -->
+
+      <div class="extra">
+        <div class="ui right floated">
+          <div class="ui small basic icon buttons">
+            <button class="ui button down">
+              <i class="chevron down icon" style="cursor:pointer"></i>
+            </button>
+            <button class="ui button up">
+              <i class="chevron up icon" style="cursor:pointer"></i>
+            </button>
+            <button class="ui button add">
+              <i class="plus icon" style="color:green;cursor:pointer"></i>
+            </button>
+            <button class="ui button remove">
+              <i class="trash icon" style="color:red;cursor:pointer"></i>
+            </button>
+          </div> <!-- buttons -->
+        </div>
+      </div> <!-- extra -->
+    </div> <!-- content -->
