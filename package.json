@@ -1,0 +1,30 @@
+{
+  "name": "xlightsjs",
+  "version": "1.0.0",
+  "description": "Control string of lights via web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otrajman/xlightsjs.git"
+  },
+  "keywords": [
+    "lights",
+    "rpi",
+    "pixel",
+    "ws2801"
+  ],
+  "author": "Omer Trajman (otrajman@gmail.com)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/otrajman/xlightsjs/issues"
+  },
+  "homepage": "https://github.com/otrajman/xlightsjs#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "rpi-gpio": "^2.1.5",
+    "rpi-ws2801": "0.0.4"
+  }
+}
