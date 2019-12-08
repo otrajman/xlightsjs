@@ -256,15 +256,17 @@ async function runTrace(tail, direction, color, speed) {
     if (run_leds) leds.update();
     else console.log('Update');
     if (!should_run) return;
-    const run_speed = speed ? 0.1/speed * 10000 : 1000;
+    const run_speed = speed ? 0.1/speed * 1000 : 100;
+    console.log(run_speed);
     await new Promise(c => setTimeout(c, run_speed));
+    console.log('done');
   }
 }
 
 async function trace(action) {
-  runTrace(action.tail, action.reverse,  action.colors[0], action.speed);
+  await runTrace(action.tail, action.reverse,  action.colors[0], action.speed);
   if (!should_run) return;
-  runTrace(action.tail, !action.reverse,  action.colors[0], action.speed);
+  await runTrace(action.tail, !action.reverse,  action.colors[0], action.speed);
 }
 
 async function blink(action) {
