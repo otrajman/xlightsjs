@@ -1,0 +1,9 @@
+/var/log/xlights/* {
+  rotate 30
+  daily
+  su dietpi
+  compress
+  missingok
+  notifempty 
+  create 0640 dietpi dietpi
+}

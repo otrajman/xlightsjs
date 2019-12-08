@@ -217,10 +217,10 @@ async function  solid(action) {
   const [r,g,b] = color_step(action.colors[0], 'black', 1 - action.brightness)
   if (run_leds) leds.fill(r,g,b);
   else console.log(`fill ${r} ${g} ${b}`);
-  const wait_ms = 5000/(action.speed ? action.speed : 1);
-  for (let wait = 0; wait < wait_ms; wait += 100) {
+  const end = new Date(new Date().getTime() + (action.time ? action.time : 1) * 60000);
+  while (end > new Date()) {
     if (!should_run) return;
-    await new Promise(c => setTimeout(c, wait_ms));
+    await new Promise(c => setTimeout(c, 1000));
   }
 }
 
