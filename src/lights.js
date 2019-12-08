@@ -257,9 +257,7 @@ async function runTrace(tail, direction, color, speed) {
     else console.log('Update');
     if (!should_run) return;
     const run_speed = speed ? 0.1/speed * 1000 : 100;
-    console.log(run_speed);
     await new Promise(c => setTimeout(c, run_speed));
-    console.log('done');
   }
 }
 
