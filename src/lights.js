@@ -1,4 +1,4 @@
-const gpio = require('rpi-gpio');
+const gpio = require('rpi-gpio').promise;
 const leds = require('rpi-ws2801');
 
 const PIXELS = 125;
@@ -6,12 +6,15 @@ const PIXELS = 125;
 let run_leds = false;
 try { 
   run_leds = leds.connect(PIXELS); 
+  if (run_leds === undefined) run_leds = true;
 }
 catch(e) {
   console.log(e);
 }
 
-if (!run_leds) console.log('Not running LEDs');
+let gpio_up = false;
+if (run_leds) gpio.setup(15, gpio.DIR_OUT).then(() => { gpio_up = true; });
+else console.log('Not running LEDs');
 
 let config = {
   state: 0,
@@ -32,10 +35,17 @@ let updated_config = new Date();
 let should_run = false;
 let running = false;
 
+async function waitGPIO() {
+  while (run_leds && !gpio_up) await new Promise(c => setTimeout(c, 100));
+}
+
 async function quit() {
   await stop();
   console.log('Exiting');
-  if (run_leds) gpio.write(15, false);
+  if (run_leds)  {
+    await waitGPIO();
+    gpio.write(15, false);
+  }
   process.exit();
 }
 
@@ -50,7 +60,10 @@ async function start() {
   should_run = true;
   running = true;
 
-  if (run_leds) gpio.write(15, true); 
+  if (run_leds) {
+    await waitGPIO();
+    gpio.write(15, true); 
+  }
   alight();
 
   console.log('Running');
@@ -142,10 +155,14 @@ function color_step(c0, c1, pct) {
 
 const range = (start, end) => Array.from({length: end}, (_, i) => start + i);
 
+async function off() {
+  leds.fill(0,0,0);
+}
+
 async function dim() {
   console.log('dim');
   const channels = run_leds ? leds.getChannelCount() : PIXELS * 3;
-  for (const b of range(255, 0)) {
+  for (const b of range(130, 0)) {
     for (const j of range(0, channels)) {
       if (run_leds) leds.setChannelPower(j, b);
     }
@@ -158,7 +175,7 @@ async function dim() {
 async function alight() {
   console.log('alight');
   const channels = run_leds ? leds.getChannelCount() : PIXELS * 3;
-  for (const b of range(0, 256)) {
+  for (const b of range(0, 130)) {
     for (const j of range(0, channels)) {
       if (run_leds) leds.setChannelPower(j, b);
     }
@@ -187,7 +204,8 @@ async function rainbow(action) {
     }
     if (run_leds) leds.update();
     if (!should_run) return;
-    if (action.speed) await new Promise(c => setTimeout(c, action.speed * 100));
+    const speed = action.speed ? 0.1/action.speed * 1000 : 100;
+    await new Promise(c => setTimeout(c, speed));
   }
 
   if (!run_leds) console.log(`setColors ${rainbow_colors}`);
@@ -207,20 +225,15 @@ async function  solid(action) {
 async function runTrace(tail, direction, color, speed) {
   if (typeof color === 'string') color = colors[color];
   let pos = 0;
-  let start = 0;
-  let order = range(0, PIXELS);
-  if (direction) {
-    order.reverse();
-    start = PIXELS;
-  }
+  const order = range(0, PIXELS);
+  if (direction) order.reverse();
+
+  const stride = Math.round(255 / tail)
+  const bias = 255 * (1 - Math.log(stride)/Math.log(255)) / 2;
 
   for (const i of order) {
     if (direction) pos = Math.min(PIXELS, i + tail);
     else pos = Math.max(0, i - tail)
-
-    step = 1
-    stride = Math.round(255 / tail)
-    bias = 255 * (1 - Math.log(stride)/Math.log(255)) / 2;
 
     if (run_leds) leds.setColor(i, color);
     else console.log(`setColor ${i} ${color}`);
@@ -229,6 +242,7 @@ async function runTrace(tail, direction, color, speed) {
     if (direction) otail = range(i, pos);
     else otail.reverse(); 
 
+    let step = 1
     for (const j of otail) {
       let [r, g, b] = color;
       r = Math.round(Math.max(0, r - bias - step * stride));
@@ -242,7 +256,8 @@ async function runTrace(tail, direction, color, speed) {
     if (run_leds) leds.update();
     else console.log('Update');
     if (!should_run) return;
-    await new Promise(c => setTimeout(c, action.speed * 100));
+    const run_speed = speed ? 0.1/speed * 10000 : 1000;
+    await new Promise(c => setTimeout(c, run_speed));
   }
 }
 
@@ -297,22 +312,35 @@ async function alternate(action) {
 }
 
 async function cycle(action) {
-  const cycle_colors = action.colors.map(c => colors[c]).concat(range(0, action.alternate).map(x => colors['back']));
+  const cycle_colors = action.colors.map(c => color_step(c, 'black', 1 - action.brightness))
   if (action.reverse) cycle_colors.reverse();
 
+  const speed = action.speed ? 0.2/action.speed * 1000 : 1000;
+  const transition = 100;
+
   for (const i of range(0, cycle_colors.length - 1)) {
-    for (const j of range(0, 11)) {
-      const [r,g,b] = color_step(cycle_colors[i], cycle_colors[i + 1], j/10);
+    for (const j of range(0, transition)) {
+      const [r,g,b] = color_step(cycle_colors[i], cycle_colors[i + 1], j/transition);
       if (run_leds) leds.fill(r,g,b);
       else console.log(`fill ${r} ${g} ${b}`);
 
       if (!should_run) return;
-      if (action.speed) {
-        if (!should_run) return;
-        await new Promise(c => setTimeout(c, action.speed * 200));
-      }
+      await new Promise(c => setTimeout(c, speed));
     }
   }
+
+  cycle_colors.reverse();
+  for (const i of range(0, cycle_colors.length - 1)) {
+    for (const j of range(0, transition)) {
+      const [r,g,b] = color_step(cycle_colors[i], cycle_colors[i + 1], j/transition);
+      if (run_leds) leds.fill(r,g,b);
+      else console.log(`fill ${r} ${g} ${b}`);
+
+      if (!should_run) return;
+      await new Promise(c => setTimeout(c, speed));
+    }
+  }
+
 }
 
 actions = {
@@ -329,8 +357,6 @@ process.on('SIGINT', quit);
 process.on('SIGUSR1', quit);
 process.on('SIGUSR2', quit);
 process.on('uncaughException', quit);
-
-if (run_leds) gpio.setup(15, gpio.DIR_OUT);
 
 module.exports = {
   update,

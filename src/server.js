@@ -48,5 +48,17 @@ app.post('/preview', (req, res) => {
 
 app.listen(port, () => { console.log(`Listening on ${port}`) });
 
-lights.update(JSON.parse(fs.readFileSync(CONFIG, {encoding: 'utf-8'})));
-lights.start();
+async function main() {
+  await lights.update(JSON.parse(fs.readFileSync(CONFIG, {encoding: 'utf-8'})));
+  await lights.preview({
+    action: 'trace',
+    colors: ['white'],
+    time: 0.1,
+    tail: 5,
+    reverse: false,
+    speed: 1, 
+  });
+  lights.start();
+}
+
+main();
