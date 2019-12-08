@@ -153,7 +153,7 @@ function color_step(c0, c1, pct) {
   ]
 }
 
-const range = (start, end) => Array.from({length: end}, (_, i) => start + i);
+const range = (start, end) => Array.from({length: Math.abs(end-start)}, (_, i) => start + i);
 
 async function off() {
   leds.fill(0,0,0);
@@ -224,16 +224,16 @@ async function  solid(action) {
 
 async function runTrace(tail, direction, color, speed) {
   if (typeof color === 'string') color = colors[color];
-  let pos = 0;
   const order = range(0, PIXELS);
   if (direction) order.reverse();
 
-  const stride = Math.round(255 / tail)
-  const bias = 255 * (1 - Math.log(stride)/Math.log(255)) / 2;
+  const [a,b,c] = color;
+  const stride = Math.round(Math.max(a,b,c) / tail)
+  const bias = 255 * (1 - Math.log(stride)/Math.log(Math.max(a,b,c))) / 2;
 
   for (const i of order) {
+    let pos = Math.max(0, i - tail)
     if (direction) pos = Math.min(PIXELS, i + tail);
-    else pos = Math.max(0, i - tail)
 
     if (run_leds) leds.setColor(i, color);
     else console.log(`setColor ${i} ${color}`);
@@ -242,7 +242,7 @@ async function runTrace(tail, direction, color, speed) {
     if (direction) otail = range(i, pos);
     else otail.reverse(); 
 
-    let step = 1
+    let step = 0
     for (const j of otail) {
       let [r, g, b] = color;
       r = Math.round(Math.max(0, r - bias - step * stride));
