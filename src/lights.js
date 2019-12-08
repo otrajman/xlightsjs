@@ -64,7 +64,9 @@ async function start() {
     await waitGPIO();
     gpio.write(15, true); 
   }
-  alight();
+
+  await alight();
+  await dim();
 
   console.log('Running');
 
@@ -80,13 +82,13 @@ async function start() {
         console.log(JSON.stringify(run_config));
       }
 
+      if (!should_run) break;
+
       const now = (new Date()).getHours();
       if (now < run_config.start || now >= run_config.end) {
-        await (new Promise(c => setTimeout(c, 1000)));
+        await new Promise(c => setTimeout(c, 1000));
         continue;
       }
-
-      if (!should_run) break;
 
       for(const action of run_config.actions) {
         await run(action);
@@ -98,7 +100,7 @@ async function start() {
     console.error('Stopping on error', e);
   }
 
-  dim();
+  await dim();
   running = false;
   console.log('Done Running');
 }
@@ -109,6 +111,7 @@ async function stop() {
   should_run = false;
   while(running) await (new Promise(c => setTimeout(c, 100)));
   console.log('Stopped');
+  off();
 }
 
 async function preview(action) {
@@ -153,18 +156,18 @@ function color_step(c0, c1, pct) {
   ]
 }
 
-const range = (start, end) => Array.from({length: Math.abs(end-start)}, (_, i) => start + i);
+const range = (start, end) => Array.from({length: Math.abs(end-start)}, (_, i) => end > start ? start + i : start - i);
 
 async function off() {
   leds.fill(0,0,0);
 }
 
 async function dim() {
-  console.log('dim');
+  console.log('Dimming');
   const channels = run_leds ? leds.getChannelCount() : PIXELS * 3;
-  for (const b of range(130, 0)) {
+  for (const b of range(50, -1)) {
     for (const j of range(0, channels)) {
-      if (run_leds) leds.setChannelPower(j, b);
+      if (run_leds) leds.setChannelPower(j, b/100);
     }
     if (run_leds) leds.update();
     else console.log(`setChannelPower ${b}`);
@@ -173,14 +176,13 @@ async function dim() {
 }
 
 async function alight() {
-  console.log('alight');
+  console.log('Lighting');
   const channels = run_leds ? leds.getChannelCount() : PIXELS * 3;
-  for (const b of range(0, 130)) {
+  for (const b of range(0, 50)) {
     for (const j of range(0, channels)) {
-      if (run_leds) leds.setChannelPower(j, b);
+      if (run_leds) leds.setChannelPower(j, b/100);
     }
     if (run_leds) leds.update();
-    // else console.log(`setChannelPower ${b}`);
     await new Promise(c => setTimeout(c, 10));
   }
 }
@@ -228,8 +230,9 @@ async function runTrace(tail, direction, color, speed) {
   if (direction) order.reverse();
 
   const [a,b,c] = color;
-  const stride = Math.round(Math.max(a,b,c) / tail)
-  const bias = 255 * (1 - Math.log(stride)/Math.log(Math.max(a,b,c))) / 2;
+  const max = Math.max(a,b,c);
+  const stride = Math.round(max / tail)
+  const bias = max * (1 - Math.log(stride)/Math.log(max)) / 2;
 
   for (const i of order) {
     let pos = Math.max(0, i - tail)
@@ -284,7 +287,7 @@ async function blink(action) {
     await new Promise(c => setTimeout(c, wait_ms));
   }
 
-  dim();
+  await dim();
 
   wait_ms = 500/(action.speed ? action.speed : 1);
   for (let wait = 0; wait < wait_ms; wait += 100) {

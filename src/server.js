@@ -56,7 +56,7 @@ async function main() {
     time: 0.1,
     tail: 5,
     reverse: false,
-    speed: 1, 
+    speed: 4, 
   });
   lights.start();
 }

@@ -1,0 +1,40 @@
+#! /bin/bash
+# Start/stop xlights
+#
+### BEGIN INIT INFO
+# Provides:          xlights
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      S
+# Short-Description: Runs Webserver to Manage WS2801 Lights
+# Description:       Runs Webserver to Manage WS2801 Lights
+### END INIT INFO
+
+DESC="xlights daemon"
+NAME=xlights
+DIR=/home/dietpi/xlightsjs/
+SCRIPT="npm run start"
+PATH=$PATH:$DIR
+
+. /lib/lsb/init-functions
+
+case "$1" in
+start)	log_daemon_msg "Starting xlights"
+	cd $DIR
+	$SCRIPT >> /var/log/xlights/`date +"%F"`.log 2>&1 &
+	log_daemon_msg "xlights started"
+	;;
+stop)	log_daemon_msg "Stoppping xlights"
+	sudo kill -HUP $(ps aux | grep node | grep server | grep -v grep | awk '{print $2}')
+        log_daemon_msg "Turning off lights"
+	;;
+restart) log_daemon_msg "Restarting xlights"
+	 $0 stop
+	 $0 start
+	 ;;
+status) log_daemon_msg "xlights status"
+	ps aux | grep node | grep server | grep -v grep | awk '{print $2}'
+	;;
+esac
+exit 0
