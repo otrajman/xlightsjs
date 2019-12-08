@@ -222,14 +222,14 @@ var restore = function(actions) {
 $('.stop.button').click(function() {
   $('.play.button').removeClass('active');
   $.get('/stop', function(data) {
-    $(this).addClass('active');
+    $('.stop.button').addClass('active');
   });
 });
 
 $('.play.button').click(function() {
   $('.stop.button').removeClass('active');
   $.get('/start', function(data) {
-    $(this).addClass('active');
+    $('.play.button').addClass('active');
   });
 });
 
@@ -245,8 +245,8 @@ var saveAction = function(value) {
 
     var action = {
       action:action_type,
-      speed:$(action_item).find(':input[name=speed]')[0].value,
-      time:$(action_item).find(':input[name=time]')[0].value,
+      speed:parseInt($(action_item).find(':input[name=speed]')[0].value),
+      time:parseInt($(action_item).find(':input[name=time]')[0].value),
       reverse:0,
       colors:colors
     }
@@ -254,17 +254,17 @@ var saveAction = function(value) {
     switch(action_type) {
       case 'rainbow':
       case 'alternate':
-        action.reverse = $(action_item).find(':input[name=reverse]')[0].value;
+        action.reverse = parseInt($(action_item).find(':input[name=reverse]')[0].value);
         break;
       case 'solid':
       case 'cycle':
-        action.brightness = $(action_item).find(`:input[type=radio][name=brightness_${value.id}]:checked`)[0].value;
+        action.brightness = parseFloat($(action_item).find(`:input[type=radio][name=brightness_${value.id}]:checked`)[0].value);
         break;
       case 'trace':
-        action.tail = $(action_item).find(`:input[type=radio][name=tail_${value.id}]:checked`)[0].value;
+        action.tail = parseInt($(action_item).find(`:input[type=radio][name=tail_${value.id}]:checked`)[0].value);
         break;
       case 'blink':
-        action.alternate = $(action_item).find(`:input[type=radio][name=density_${value.id}]:checked`)[0].value;
+        action.alternate = parseInt($(action_item).find(`:input[type=radio][name=density_${value.id}]:checked`)[0].value);
         break;
     }
 
@@ -276,8 +276,8 @@ $('.save.button').click(function() {
 
   var save = {
     state:state,
-    start:$(':input[name=start]')[0].value,
-    end:$(':input[name=end]')[0].value,
+    start:parseInt($(':input[name=start]')[0].value),
+    end:parseInt($(':input[name=end]')[0].value),
     actions:[] 
   };
 
@@ -294,13 +294,23 @@ $('.save.button').click(function() {
 });
 
 $(document).ready(function(){
-  $.get('/lights', function(data) {
+  fetch('/lights', { method: 'GET' }).then(data => {
+    data.json().then(actions => {
+      if(actions.actions.length === 0) {
+        enableElements();
+        if($('#light_actions').children().length == 0)
+          $('.ui.basic.modal').modal('show');
+      } else restore(actions);
+    });
+  });
+
+  /* $.get('/lights', function(data) {
     var actions = JSON.parse(data);
     if(actions.actions.length === 0) {
       enableElements();
       if($('#light_actions').children().length == 0)
         $('.ui.basic.modal').modal('show');
     } else restore(actions);
-  });
+  }); */
 });
 

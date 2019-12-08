@@ -23,17 +23,18 @@
 *******************************/
 
 .ui.modal {
-  position: absolute;
   display: none;
+  position: fixed;
   z-index: @zIndex;
+
+  top: 50%;
+  left: 50%;
   text-align: left;
 
   background: @background;
   border: @border;
   box-shadow: @boxShadow;
   transform-origin: @transformOrigin;
-
-  flex: 0 0 auto;
 
   border-radius: @borderRadius;
   user-select: text;
@@ -310,20 +311,6 @@
   color: @basicInvertedModalHeaderColor;
 }
 
-/* Resort to margin positioning if legacy */
-.ui.legacy.modal,
-.ui.legacy.page.dimmer > .ui.modal {
-  top: 50%;
-  left: 50%;
-}
-
-.ui.legacy.page.dimmer > .ui.scrolling.modal,
-.ui.page.dimmer > .ui.scrolling.legacy.modal,
-.ui.top.aligned.legacy.page.dimmer > .ui.modal,
-.ui.top.aligned.dimmer > .ui.legacy.modal {
-  top: auto;
-}
-
 /* Tablet and Mobile */
 @media only screen and (max-width : @largestTabletScreen) {
   .ui.basic.modal > .close {
@@ -351,38 +338,12 @@
 *******************************/
 
 /*--------------
-   Top Aligned
----------------*/
-
-/* Top Aligned Modal */
-.modals.dimmer[class*="top aligned"] .modal {
-  margin: @topAlignedMargin auto;
-}
-@media only screen and (max-width : @largestMobileScreen) {
-  .modals.dimmer[class*="top aligned"] .modal {
-    margin: @mobileTopAlignedMargin auto;
-  }
-}
-/* Legacy Top Aligned */
-.legacy.modals.dimmer[class*="top aligned"] {
-  padding-top: @topAlignedMargin;
-}
-@media only screen and (max-width : @largestMobileScreen) {
-  .legacy.modals.dimmer[class*="top aligned"] {
-    padding-top: @mobileTopAlignedMargin;
-  }
-}
-
-/*--------------
     Scrolling
 ---------------*/
 
-/* Scrolling Dimmer */
+/* A modal that cannot fit on the page */
 .scrolling.dimmable.dimmed {
   overflow: hidden;
-}
-.scrolling.dimmable > .dimmer {
-  justify-content: flex-start;
 }
 .scrolling.dimmable.dimmed > .dimmer {
   overflow: auto;
@@ -392,10 +353,11 @@
   position: fixed;
 }
 .modals.dimmer .ui.scrolling.modal {
-  margin: @scrollingMargin auto;
+  position: static !important;
+  margin: @scrollingMargin auto !important;
 }
 
-/* Undetached Scrolling */
+/* undetached scrolling */
 .scrolling.undetached.dimmable.dimmed {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
@@ -409,11 +371,25 @@
   margin-top: @scrollingMargin !important;
 }
 
+/* Coupling with Sidebar */
+.undetached.dimmable.dimmed > .pusher {
+  z-index: auto;
+}
+
+@media only screen and (max-width : @largestTabletScreen) {
+  .modals.dimmer .ui.scrolling.modal {
+    margin-top: @mobileScrollingMargin !important;
+    margin-bottom: @mobileScrollingMargin !important;
+  }
+}
+
 /* Scrolling Content */
+
 .ui.modal .scrolling.content {
   max-height: @scrollingContentMaxHeight;
   overflow: auto;
 }
+
 
 /*--------------
    Full Screen
@@ -421,7 +397,11 @@
 
 .ui.fullscreen.modal {
   width: @fullScreenWidth !important;
+  left: @fullScreenOffset !important;
   margin: @fullScreenMargin;
+}
+.ui.fullscreen.scrolling.modal {
+  left: 0em !important;
 }
 .ui.fullscreen.modal > .header {
   padding-right: @closeHitbox;

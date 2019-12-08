@@ -20,7 +20,7 @@ var
   less         = require('gulp-less'),
   minifyCSS    = require('gulp-clean-css'),
   plumber      = require('gulp-plumber'),
-  print        = require('gulp-print').default,
+  print        = require('gulp-print'),
   rename       = require('gulp-rename'),
   replace      = require('gulp-replace'),
   uglify       = require('gulp-uglify'),
@@ -145,7 +145,7 @@ module.exports = function(callback) {
     })
   ;
 
-  compressedStream
+  compressedStream = stream
     .pipe(plumber())
     .pipe(clone())
     .pipe(replace(assets.source, assets.compressed))
@@ -162,7 +162,7 @@ module.exports = function(callback) {
   ;
 
   // copy assets
-  gulp.src(source.themes + '/**/assets/**/*.*')
+  gulp.src(source.themes + '/**/assets/**/' + globs.components + '?(s).*')
     .pipe(gulpif(config.hasPermission, chmod(config.permission)))
     .pipe(gulp.dest(output.themes))
   ;
