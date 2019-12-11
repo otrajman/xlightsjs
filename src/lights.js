@@ -94,6 +94,8 @@ async function start() {
         await run(action);
         if (!should_run) break;
       }
+
+      if (now < run_config.start || now >= run_config.end) await dim();
     }
   }
   catch (e) {
