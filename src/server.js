@@ -9,7 +9,7 @@ const CONFIG = path.resolve(__dirname, '..', 'config', 'lights.json');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use(express.static(path.resolve(__dirname, 'lights')));
+app.use(express.static(path.resolve(__dirname, 'public')));
 
 const lights = require('./lights');
 

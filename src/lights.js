@@ -50,7 +50,24 @@ async function quit() {
 }
 
 function update(new_config) {
-  config = new_config;
+  config.state = parseInt(new_config.state);
+  config.start = parseInt(new_config.start);
+  config.end = parseInt(new_config.end);
+  config.actions = new_config.actions.map(a => {
+    if (a.action in actions) {
+      return {
+        action: a.action,
+        speed: parseInt(a.speed),
+        time: parseInt(a.time),
+        reverse: parseInt(a.reverse),
+        colors: a.colors.filter(c => c in colors),
+        brightness: parseFloat(a.brightness),
+      }
+    }
+    return null;
+  }).filter(a => a);
+  console.log('New config');
+  console.log(JSON.stringify(new_config, null, 2));
   updated_config = new Date();
 }
 
