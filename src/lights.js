@@ -86,16 +86,17 @@ async function start() {
 
       const now = (new Date()).getHours();
       if (now < run_config.start || now >= run_config.end) {
+        await dim();
         await new Promise(c => setTimeout(c, 1000));
         continue;
       }
+
+      if (dimmed) await alight();
 
       for(const action of run_config.actions) {
         await run(action);
         if (!should_run) break;
       }
-
-      if (now < run_config.start || now >= run_config.end) await dim();
     }
   }
   catch (e) {
@@ -134,6 +135,7 @@ async function run(action) {
     if (!should_run) return;
     await actions[action.action](action); //new Promise(c => setTimeout(c, 1000));
   }
+  dimmed = false;
 }
 
 colors = {
@@ -164,7 +166,10 @@ async function off() {
   leds.fill(0,0,0);
 }
 
+let dimmed = false;
+
 async function dim() {
+  if (dimmed) return;
   console.log('Dimming');
   const channels = run_leds ? leds.getChannelCount() : PIXELS * 3;
   for (const b of range(50, -1)) {
@@ -175,6 +180,7 @@ async function dim() {
     else console.log(`setChannelPower ${b}`);
     await new Promise(c => setTimeout(c, 10));
   }
+  dimmed = true;
 }
 
 async function alight() {
@@ -187,6 +193,7 @@ async function alight() {
     if (run_leds) leds.update();
     await new Promise(c => setTimeout(c, 10));
   }
+  dimmed = false;
 }
 
 async function rainbow(action) {
