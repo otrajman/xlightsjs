@@ -225,14 +225,17 @@ async function rainbow(action) {
 
   if (action.reverse) rainbow_colors.reverse();
 
+  if (!run_leds) console.log(rainbow_colors);
+
   for (let i = 0; i < PIXELS; i++) {
     for (let j = 0; j < PIXELS; j++) {
       if (run_leds) leds.setColor(j, rainbow_colors[(j + i) % PIXELS])
+      else console.log(`${j} ${rainbow_colors[(j+i) % PIXELS]}`);
       if (!should_run) return;
     }
     if (run_leds) leds.update();
     if (!should_run) return;
-    const speed = action.speed ? 0.1/action.speed * 1000 : 100;
+    const speed = action.speed ? 0.1/action.speed * 1000 : 1000;
     await new Promise(c => setTimeout(c, speed));
   }
 
