@@ -214,7 +214,7 @@ async function alight() {
 }
 
 async function rainbow(action) {
-  const transitions = Math.ceil(PIXELS/(action.colors.length - 1));
+  const transitions = Math.ceil(PIXELS/action.colors.length);
   const rainbow_colors = [];
   for (let i = 0; i < action.colors.length; i++) {
     for (let j = 0; j < transitions; j++) {
@@ -232,7 +232,7 @@ async function rainbow(action) {
     }
     if (run_leds) leds.update();
     if (!should_run) return;
-    const speed = action.speed ? 0.1/action.speed * 1000 : 100;
+    const speed = action.speed ? 0.5/action.speed * 1000 : 100;
     await new Promise(c => setTimeout(c, speed));
   }
 
