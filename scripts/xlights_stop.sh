@@ -1,2 +1,2 @@
 #!/bin/sh
-sudo kill -SIGINT $(ps aux | grep node | grep server | grep -v grep | awk '{print $2}')
+sudo kill -s SIGINT $(ps aux | grep node | grep server | grep -v grep | awk '{print $2}')

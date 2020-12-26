@@ -8,3 +8,4 @@ ExecStop=/home/dietpi/xlightsjs/scripts/xlights_stop.sh
 
 [Install]
 Alias=xlights.service
+WantedBy=multi-user.target
