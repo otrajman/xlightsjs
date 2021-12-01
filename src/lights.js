@@ -5,7 +5,7 @@ const PIXELS = 125;
 
 let run_leds = false;
 try { 
-  run_leds = leds.connect(PIXELS); 
+  run_leds = leds.connect(PIXELS);
   if (run_leds === undefined) run_leds = true;
 }
 catch(e) {
