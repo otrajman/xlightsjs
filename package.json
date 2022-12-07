@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/otrajman/xlightsjs#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "microtime": "^3.0.0",
     "rpi-gpio": "^2.1.7",
     "rpi-ws2801": "https://github.com/Jorgen-VikingGod/node-rpi-ws2801",
